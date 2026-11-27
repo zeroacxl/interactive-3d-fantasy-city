@@ -8,6 +8,7 @@ import { createTerrain } from './terrain'
 import { buildCity } from './city'
 import { Tower, ELEV_NAMES } from './tower'
 import { Dome } from './dome'
+import { Venues } from './venues'
 import { Railway } from './railway'
 import { Life } from './life'
 import { AudioEngine } from './audio'
@@ -26,7 +27,7 @@ export interface HudState {
   fps: number
   underwater: boolean
 }
-export type Place = 'tunel' | 'portal' | 'praca' | 'torre' | 'topo' | 'domo' | 'bairro' | 'praia' | 'estacao'
+export type Place = 'tunel' | 'portal' | 'praca' | 'torre' | 'topo' | 'domo' | 'bairro' | 'praia' | 'estacao' | 'clube'
 
 export class Game {
   renderer: THREE.WebGLRenderer
@@ -39,6 +40,7 @@ export class Game {
   ocean!: Ocean
   tower!: Tower
   dome!: Dome
+  venues!: Venues
   railway!: Railway
   life!: Life
   sh: Shared = { time: { value: 0 }, night: { value: 0 }, glow: { value: 0.3 } }
@@ -110,6 +112,9 @@ export class Game {
     this.dome.onSplash = () => this.audio.splash()
     this.dome.onMsg = (s) => this.say(s)
     this.life = new Life(ctx, this.scene, T, this.M)
+    this.venues = new Venues(ctx)
+    this.venues.onMsg = (s) => this.say(s)
+    this.venues.onMusic = () => this.audio.setTrack((this.audio.track + 1) % 4)
     this.railway = new Railway(ctx)
     this.railway.onMsg = (s) => this.say(s)
     this.railway.onBell = () => this.audio.ding(true)
@@ -215,6 +220,9 @@ export class Game {
       case 'bairro':
         set(-186, G + 0.2, 20, Math.PI / 2)
         break
+      case 'clube':
+        set(-105, G + 0.3, -201, 0)
+        break
       case 'estacao':
         set(0, G + 0.3, 310, Math.PI)
         break
@@ -269,6 +277,7 @@ export class Game {
       const inp = { fx, fz, sprint: this.key('ShiftLeft') || this.key('ShiftRight'), jump: this.key('Space') }
       this.tower.update(dt, pl, this.sky.night, t)
       pl.update(dt, inp, this.lv)
+      if (this.pressed.has('KeyH') && this.railway.riding) { this.audio.ding(false); this.say('Aqua Express · passagem livre!') }
       if (this.pressed.has('KeyE')) this.interactNow()
       for (let i = 1; i <= 5; i++) if (this.pressed.has('Digit' + i)) this.tower.select(i - 1)
     } else {
@@ -278,6 +287,7 @@ export class Game {
     this.pressed.clear()
 
     this.railway.update(dt, pl)
+    this.venues.update(t)
 
     // passos
     const sprint = this.key('ShiftLeft')

@@ -42,8 +42,9 @@ export class Railway {
       const sign = new THREE.Mesh(new THREE.PlaneGeometry(8, 2), new THREE.MeshBasicMaterial({ map: signTexture('AQUA EXPRESS', STATIONS[i] + ' · E para embarcar', '#007b96', '#40b9a1'), side: THREE.DoubleSide }))
       sign.position.set(x, G + 4, z); sign.rotation.y = a; c.scene.add(sign)
       c.lv.interact.push({ x, y: G, z, r: 8, label: () => this.riding ? null : 'Embarcar no Aqua Express · ' + STATIONS[i], run: () => {
+        this.station = i; this.angle = i * Math.PI / 2; this.wait = 12
         this.riding = true; this.exitRequested = false
-        this.onMsg('Aqua Express: E solicita desembarque na próxima estação. Boa viagem!'); this.onBell()
+        this.onMsg('Aqua Express: E solicita desembarque; H toca a buzina. Boa viagem!'); this.onBell()
       } })
       // Bancos, floreiras e cobertura de cada terminal.
       c.W.box('wood', x + 4, G + 0.65, z, 1.2, 0.4, 4, 0xc38a59, 2)
@@ -90,7 +91,9 @@ export class Railway {
         if (this.riding) { this.onBell(); this.onMsg('Estação ' + STATIONS[this.station] + ' · parada de 12 segundos') }
       }
     }
+    const oldAngle = this.train.rotation.y
     this.position()
+    if (this.riding) pl.yaw += this.train.rotation.y - oldAngle
     if (!this.riding) return
     pl.vel.set(0, 0, 0)
     if (this.exitRequested && this.wait > 0) {

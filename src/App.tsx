@@ -17,6 +17,7 @@ const PLACES: { id: Place; label: string; icon: string }[] = [
   { id: 'topo', label: 'Topo da torre (620 m)', icon: '🚀' },
   { id: 'domo', label: 'Jardim exótico', icon: '🌺' },
   { id: 'bairro', label: 'Bairro das casas', icon: '🏡' },
+  { id: 'clube', label: 'Club Aurora', icon: '🪩' },
   { id: 'estacao', label: 'Aqua Express', icon: '🚆' },
   { id: 'praia', label: 'Praia', icon: '🏖️' },
 ]

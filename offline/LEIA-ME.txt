@@ -1,0 +1,25 @@
+AQUA CITY - EDICAO OFFLINE PARA WINDOWS
+
+1. Extraia TODO o ZIP para uma pasta (nao execute de dentro do ZIP).
+2. De dois cliques em INICIAR.bat.
+3. O servidor local inicia e o navegador abre automaticamente.
+4. Mantenha a janela aberta. Para encerrar, use Ctrl+C ou feche a janela.
+
+Nao precisa de internet, npm, Node.js ou Python. Usa o Windows PowerShell
+incluido no Windows 10/11. O navegador precisa suportar WebGL.
+Se a politica da sua organizacao bloquear scripts, consulte o administrador.
+Se o navegador nao abrir, use o endereco mostrado na janela.
+
+CONTROLES
+WASD: andar; mouse: olhar; Shift: correr; Espaco: pular.
+E: interagir; Esc: menu; 1-5: elevador; C: zoom.
+Esc > Ir para > Aqua Express: embarcar no trem com E.
+No trem: E solicita desembarque na parada, H toca um sinal sonoro.
+Embarcar chama o trem para sua estacao. A partida ocorre apos 12 segundos.
+Esc > Ir para > Club Aurora: DJ, bar sem alcool, iluminacao interativa
+ e palco com postes de pole dance (sem nudez ou atos sexuais).
+Os quiosques na calcada dos predios do lado esquerdo do bulevar
+oferecem recepcao, guia, radio e iluminacao de fachada.
+
+Todo o jogo, texturas e sintese musical estao incluidos em index.html.
+Nenhum recurso de rede e necessario. Clique em Entrar para habilitar o som.
