@@ -1,0 +1,134 @@
+@import "tailwindcss";
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  background: #7fd4ff;
+  font-family: "Trebuchet MS", "Segoe UI", Verdana, sans-serif;
+  overflow: hidden;
+}
+
+.aero-bg {
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(255, 255, 255, 0.75), transparent 45%),
+    radial-gradient(ellipse at 80% 100%, rgba(170, 255, 120, 0.7), transparent 50%),
+    linear-gradient(160deg, #1fa7f0 0%, #39c6f5 40%, #7be04a 100%);
+}
+
+.aero-title {
+  text-shadow: 0 2px 0 rgba(0, 90, 140, 0.45), 0 0 24px rgba(255, 255, 255, 0.8), 0 6px 30px rgba(0, 120, 200, 0.6);
+  background: linear-gradient(180deg, #ffffff 30%, #d6fbff 60%, #b7ff9a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 3px 2px rgba(0, 80, 130, 0.5));
+}
+
+.aero-panel {
+  position: relative;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.38) 0%, rgba(120, 220, 255, 0.28) 50%, rgba(40, 150, 220, 0.34) 100%);
+  backdrop-filter: blur(10px) saturate(1.4);
+  box-shadow: 0 8px 28px rgba(0, 70, 120, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 -10px 20px rgba(0, 120, 200, 0.18);
+  text-shadow: 0 1px 2px rgba(0, 60, 100, 0.55);
+}
+
+.aero-btn {
+  position: relative;
+  border-radius: 999px;
+  color: #064b2a;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  background: linear-gradient(180deg, #e9ffd0 0%, #a6f060 45%, #5fd02f 50%, #8be84a 100%);
+  box-shadow: 0 8px 24px rgba(20, 110, 30, 0.45), inset 0 2px 0 rgba(255, 255, 255, 0.95), inset 0 -6px 12px rgba(40, 150, 20, 0.35);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: transform 0.15s, filter 0.15s;
+}
+.aero-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  filter: brightness(1.08);
+}
+.aero-btn:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.aero-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 14px;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.35), rgba(60, 170, 230, 0.35));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 3px 10px rgba(0, 80, 130, 0.25);
+  text-shadow: 0 1px 2px rgba(0, 60, 100, 0.6);
+  transition: all 0.15s;
+}
+.aero-chip:hover {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(90, 210, 255, 0.5));
+  transform: translateY(-1px);
+}
+.aero-chip.on {
+  background: linear-gradient(180deg, #e9ffd0, #7be04a);
+  color: #064b2a;
+  text-shadow: none;
+}
+
+.keycap {
+  display: inline-flex;
+  min-width: 2.1rem;
+  height: 2.1rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  font-weight: 800;
+  color: #064b6a;
+  background: linear-gradient(180deg, #ffffff, #cdefff);
+  border: 1px solid #fff;
+  box-shadow: 0 3px 0 rgba(0, 100, 150, 0.55), inset 0 1px 0 #fff;
+  text-shadow: none;
+}
+.keycap.small {
+  min-width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+}
+
+.aero-range {
+  accent-color: #7be04a;
+  height: 6px;
+}
+
+.bubble {
+  position: absolute;
+  bottom: -120px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.95) 0 8%, rgba(255, 255, 255, 0.25) 14%, rgba(180, 240, 255, 0.12) 60%, rgba(255, 255, 255, 0.55) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: inset 0 0 18px rgba(255, 255, 255, 0.45), 0 0 14px rgba(150, 230, 255, 0.4);
+  animation: rise linear infinite;
+}
+@keyframes rise {
+  0% { transform: translateY(0) translateX(0); opacity: 0; }
+  10% { opacity: 1; }
+  50% { transform: translateY(-60vh) translateX(30px); }
+  100% { transform: translateY(-120vh) translateX(-20px); opacity: 0.2; }
+}
+
+.loadbar {
+  background: linear-gradient(90deg, #7be04a, #e9ffd0, #7be04a);
+  animation: slide 1.2s ease-in-out infinite alternate;
+  box-shadow: 0 0 12px rgba(180, 255, 120, 0.9);
+}
+@keyframes slide {
+  from { transform: translateX(-30%); }
+  to { transform: translateX(130%); }
+}
