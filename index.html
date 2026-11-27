@@ -6,7 +6,19 @@
     <title>Aqua City — Cidade Frutiger Aero em 3D</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div style="min-height:100vh;display:grid;place-content:center;text-align:center;background:#143d55;color:white;font-family:Arial,sans-serif;padding:24px;box-sizing:border-box">
+        <h1>Aqua City</h1>
+        <p>Carregando a cidade…</p>
+        <p id="load-help" hidden>Não foi possível iniciar o jogo. Recarregue a página. Se o problema continuar, verifique se o GitHub Pages publicou a pasta dist gerada por npm run build, e não os arquivos-fonte.</p>
+      </div>
+    </div>
+    <script>
+      window.setTimeout(function () {
+        var help = document.getElementById('load-help');
+        if (help) help.hidden = false;
+      }, 12000);
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -520,6 +520,36 @@ export function makeTextures() {
     c.arc(w / 2, h / 2, 30, 0, 7)
     c.stroke()
   })
+  T.metal = mk(256, 256, (c, w, h) => {
+    c.fillStyle = '#d1dce0'; c.fillRect(0, 0, w, h)
+    const r = rng(452)
+    for (let i = 0; i < 1800; i++) {
+      c.strokeStyle = `rgba(45,70,80,${r() * 0.12})`
+      const y = r() * h
+      c.beginPath(); c.moveTo(0, y); c.lineTo(w, y); c.stroke()
+    }
+    c.strokeStyle = '#85999e'; c.strokeRect(2, 2, w - 4, h - 4)
+    for (const x of [8, w - 8]) for (const y of [8, h - 8]) {
+      c.fillStyle = '#667c85'; c.beginPath(); c.arc(x, y, 2, 0, Math.PI * 2); c.fill()
+    }
+  })
+  T.fabric = mk(256, 256, (c, w, h) => {
+    c.fillStyle = '#eee9df'; c.fillRect(0, 0, w, h)
+    for (let i = 0; i < w; i += 3) {
+      c.fillStyle = i % 2 ? '#c6c1b6' : '#faf8f0'
+      c.fillRect(i, 0, 1, h); c.fillRect(0, i, w, 1)
+    }
+  })
+  T.bark = mk(256, 256, (c, w, h) => {
+    c.fillStyle = '#a6977c'; c.fillRect(0, 0, w, h)
+    const r = rng(763)
+    for (let i = 0; i < 260; i++) {
+      const x = r() * w, y = r() * h
+      c.strokeStyle = i % 2 ? '#c9b99b' : '#6b6050'
+      c.lineWidth = 1 + r() * 3
+      c.beginPath(); c.moveTo(x, y); c.bezierCurveTo(x - 6, y + 12, x + 6, y + 24, x, y + 50); c.stroke()
+    }
+  })
   return T
 }
 

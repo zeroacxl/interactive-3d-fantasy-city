@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Game, type HudState, type Place } from './game/engine'
+import { MUSIC_TRACKS } from './game/audio'
 import type { Weather } from './game/sky'
 
 const WEATHERS: { id: Weather; label: string; icon: string }[] = [
@@ -16,6 +17,7 @@ const PLACES: { id: Place; label: string; icon: string }[] = [
   { id: 'topo', label: 'Topo da torre (620 m)', icon: '🚀' },
   { id: 'domo', label: 'Jardim exótico', icon: '🌺' },
   { id: 'bairro', label: 'Bairro das casas', icon: '🏡' },
+  { id: 'estacao', label: 'Aqua Express', icon: '🚆' },
   { id: 'praia', label: 'Praia', icon: '🏖️' },
 ]
 
@@ -52,6 +54,8 @@ export default function App() {
   const [weatherAuto, setWeatherAuto] = useState(true)
   const [volume, setVolume] = useState(0.7)
   const [music, setMusic] = useState(true)
+  const [track, setTrack] = useState(0)
+  const [shuffle, setShuffle] = useState(true)
   const [sens, setSens] = useState(1)
   const [hq, setHq] = useState(true)
 
@@ -210,7 +214,7 @@ export default function App() {
                 <span><b>C</b> / botão dir. — zoom</span>
                 <span><b>Esc</b> — menu / clima / hora</span>
               </div>
-              <div className="mt-4 text-xs opacity-80">🎧 Use fones para sentir a trilha sonora ambiente</div>
+              <div className="mt-4 text-xs opacity-80">🚆 Explore a linha panorâmica Aqua Express · 4 trilhas musicais originais</div>
             </div>
           ) : (
             <div className="aero-panel relative z-10 w-full max-w-3xl p-6 text-white">
@@ -263,6 +267,14 @@ export default function App() {
                   </label>
                   <label className="mt-1 flex items-center gap-2 text-sm">
                     <input type="checkbox" checked={music} onChange={(e) => { setMusic(e.target.checked); g()?.audio.setMusic(e.target.checked) }} /> Trilha musical
+                  </label>
+                  <label className="mt-2 block text-sm">Estação de rádio
+                    <select aria-label="Trilha sonora" value={track} onChange={(e) => { const v = Number(e.target.value); setTrack(v); g()?.audio.setTrack(v) }} className="mt-1 w-full rounded-lg bg-slate-800 p-2 text-white">
+                      {MUSIC_TRACKS.map((t, i) => <option key={t.name} value={i}>{t.name}</option>)}
+                    </select>
+                  </label>
+                  <label className="mt-2 flex items-center gap-2 text-sm">
+                    <input type="checkbox" checked={shuffle} onChange={(e) => { setShuffle(e.target.checked); if (g()) g()!.audio.shuffle = e.target.checked }} /> Alternar faixas automaticamente
                   </label>
                   <label className="mt-1 block text-sm">Sensibilidade do mouse: <b>{sens.toFixed(1)}x</b>
                     <input type="range" min={0.3} max={2.5} step={0.1} value={sens} onChange={(e) => { const v = parseFloat(e.target.value); setSens(v); if (g()) g()!.sens = v }} className="aero-range w-full" />

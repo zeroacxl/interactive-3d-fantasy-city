@@ -1,1 +1,23 @@
-New Game
+# Aqua City
+
+## Desenvolvimento
+
+npm ci
+npm run dev -- --host 0.0.0.0
+
+## Compilação
+
+npx tsc --noEmit
+npm run build
+
+O site pronto fica em dist/index.html. Não publique o index.html da raiz diretamente: ele aponta para código TypeScript que precisa ser compilado pelo Vite.
+
+## GitHub Pages
+
+1. Integre as alterações à branch main.
+2. Em Settings → Pages → Build and deployment → Source, selecione GitHub Actions (em vez de Deploy from a branch).
+3. No site do GitHub, use Add file → Create new file para criar .github/workflows/deploy-pages.yml na main. Copie o conteúdo de docs/deploy-pages.yml para esse arquivo. O modelo fica em docs porque a conexão do agente não tem permissão para enviar workflows. Um arquivo em docs não é executado automaticamente.
+4. Na aba Actions, execute “Publicar Aqua City no GitHub Pages” com Run workflow. Nas próximas alterações à main, a publicação será automática.
+5. Aguarde o workflow concluir e recarregue https://zeroacxl.github.io/interactive-3d-fantasy-city/ com Ctrl+Shift+R.
+
+A configuração base: './' mantém os caminhos compatíveis com o subdiretório do repositório.
