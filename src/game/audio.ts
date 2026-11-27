@@ -30,6 +30,13 @@ const CHORDS = [
 ]
 const ARP = [0, 2, 1, 3, 2, 1, 3, 2, 0, 3, 2, 1, 2, 3, 1, 0]
 
+export const MUSIC_TRACKS = [
+  { name: 'Cristal · downtempo', bpm: 88, shift: 0, density: 0.82, wave: 'sawtooth', order: [0,1,2,3,4,5,6,7], arp: ARP, drums: 1 },
+  { name: 'Maré Serena · ambient', bpm: 62, shift: 5, density: 0.42, wave: 'sine', order: [0,3,4,2,0,6,3,7], arp: [0,0,2,1,3,2,1,0,2,3,1,2,0,1,3,2], drums: 0 },
+  { name: 'Expresso Neon · synthwave', bpm: 112, shift: -2, density: 0.96, wave: 'triangle', order: [4,2,0,7,4,6,2,7], arp: [0,1,2,3,0,1,2,3,3,2,1,0,3,2,1,0], drums: 1.2 },
+  { name: 'Jardim Lunar · caixinha musical', bpm: 74, shift: 7, density: 0.65, wave: 'triangle', order: [2,4,1,0,6,3,2,7], arp: [3,1,2,0,2,1,0,2,3,2,0,1,2,0,1,3], drums: 0.25 },
+] as const
+
 export class AudioEngine {
   ctx: AudioContext | null = null
   master!: GainNode
@@ -46,7 +53,15 @@ export class AudioEngine {
   musicOn = true
   nextTime = 0
   stepN = 0
-  bpm = 88
+  bpm: number = 88
+  track = 0
+  shuffle = true
+
+  setTrack(index: number) {
+    this.track = Math.max(0, Math.min(MUSIC_TRACKS.length - 1, index))
+    this.bpm = MUSIC_TRACKS[this.track].bpm
+    this.stepN = 0
+  }
   timer = 0
   energy = 1
   wantEnergy = 1
@@ -356,6 +371,7 @@ export class AudioEngine {
       this.playStep(this.stepN, this.nextTime)
       this.nextTime += dur
       this.stepN++
+      if (this.shuffle && this.stepN >= 128) this.setTrack((this.track + 1) % MUSIC_TRACKS.length)
     }
   }
 
@@ -389,14 +405,16 @@ export class AudioEngine {
     const ctx = this.ctx!
     const bar = Math.floor(n / 16) % CHORDS.length
     const s = n % 16
-    const ch = CHORDS[bar]
+    const track = MUSIC_TRACKS[this.track]
+    const base = CHORDS[track.order[bar]]
+    const ch = { r: base.r + track.shift, n: base.n.map((m) => m + track.shift) }
     const en = this.energy
     if (s === 0) {
       // pad
       for (const m of ch.n) {
         for (const det of [-6, 6]) {
           const o = ctx.createOscillator()
-          o.type = 'sawtooth'
+          o.type = track.wave
           o.frequency.value = mtof(m) * Math.pow(2, det / 1200)
           const f = ctx.createBiquadFilter()
           f.type = 'lowpass'
@@ -427,15 +445,15 @@ export class AudioEngine {
       o.stop(t + 0.7)
     }
     // arpejo
-    if (Math.random() < 0.82 - 0.2 * (1 - en)) {
-      const idx = ARP[s]
+    if (Math.random() < track.density - 0.2 * (1 - en)) {
+      const idx = track.arp[s]
       const m = ch.n[idx % 4] + (s % 8 > 3 ? 12 : 0) + (Math.random() < 0.15 ? 12 : 0)
       this.pluck(mtof(m), t, 0.07 + Math.random() * 0.04, Math.sin(n * 0.7) * 0.6)
     }
     // sino alto ocasional
     if (s === 0 && Math.random() < 0.6) this.pluck(mtof(ch.n[3] + 24), t + 0.02, 0.05, 0.4, 2)
     // percussão leve
-    if (en > 0.4) {
+    if (en * track.drums > 0.4) {
       if (s % 2 === 1) {
         const src = ctx.createBufferSource()
         src.buffer = this.noise

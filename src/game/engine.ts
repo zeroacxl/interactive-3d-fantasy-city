@@ -8,6 +8,7 @@ import { createTerrain } from './terrain'
 import { buildCity } from './city'
 import { Tower, ELEV_NAMES } from './tower'
 import { Dome } from './dome'
+import { Railway } from './railway'
 import { Life } from './life'
 import { AudioEngine } from './audio'
 import type { Ctx } from './ctx'
@@ -25,7 +26,7 @@ export interface HudState {
   fps: number
   underwater: boolean
 }
-export type Place = 'tunel' | 'portal' | 'praca' | 'torre' | 'topo' | 'domo' | 'bairro' | 'praia'
+export type Place = 'tunel' | 'portal' | 'praca' | 'torre' | 'topo' | 'domo' | 'bairro' | 'praia' | 'estacao'
 
 export class Game {
   renderer: THREE.WebGLRenderer
@@ -38,6 +39,7 @@ export class Game {
   ocean!: Ocean
   tower!: Tower
   dome!: Dome
+  railway!: Railway
   life!: Life
   sh: Shared = { time: { value: 0 }, night: { value: 0 }, glow: { value: 0.3 } }
   M!: ReturnType<typeof makeMaterials>
@@ -108,6 +110,9 @@ export class Game {
     this.dome.onSplash = () => this.audio.splash()
     this.dome.onMsg = (s) => this.say(s)
     this.life = new Life(ctx, this.scene, T, this.M)
+    this.railway = new Railway(ctx)
+    this.railway.onMsg = (s) => this.say(s)
+    this.railway.onBell = () => this.audio.ding(true)
     B.finish(world, this.M)
 
     for (let i = 0; i < 8; i++) {
@@ -180,6 +185,8 @@ export class Game {
 
   teleport(p: Place) {
     const pl = this.player
+    this.railway.riding = false
+    this.railway.exitRequested = false
     pl.vel.set(0, 0, 0)
     const set = (x: number, y: number, z: number, yaw: number) => {
       pl.pos.set(x, y, z)
@@ -207,6 +214,9 @@ export class Game {
         break
       case 'bairro':
         set(-186, G + 0.2, 20, Math.PI / 2)
+        break
+      case 'estacao':
+        set(0, G + 0.3, 310, Math.PI)
         break
       case 'praia':
         set(0, G + 0.2, 366, Math.PI)
@@ -266,6 +276,8 @@ export class Game {
       pl.update(dt, { fx: 0, fz: 0, sprint: false, jump: false }, this.lv)
     }
     this.pressed.clear()
+
+    this.railway.update(dt, pl)
 
     // passos
     const sprint = this.key('ShiftLeft')
@@ -375,10 +387,12 @@ export class Game {
     return best
   }
   currentPrompt() {
+    if (this.railway.riding) return this.railway.exitRequested ? 'Desembarque solicitado · aguardando estação' : 'E · Solicitar desembarque do trem'
     const n = this.nearest()
     return n ? n.label() : null
   }
   interactNow() {
+    if (this.railway.riding) { this.railway.requestExit(); return }
     const n = this.nearest()
     if (n) n.run()
   }
